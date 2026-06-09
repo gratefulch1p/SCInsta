@@ -72,16 +72,24 @@ jobs:
                 THEOS: ${{ github.workspace }}/theos
 
             - name: Prepare Instagram IPA
-              run: |
-                cd main
+  run: |
+    cd main
 
-                mkdir -p packages
-                curl -L "$Instagram_URL&confirm=t" -o packages/com.burbn.instagram.ipa
+    mkdir -p packages
+    
+    # Extract file ID from Google Drive URL
+    FILE_ID=$(echo "$Instagram_URL" | grep -oP '(?<=/d/)[^/]+')
+    
+    # Download using curl with Google Drive direct download format
+    curl -L "https://drive.google.com/uc?id=${FILE_ID}&export=download" \
+      -o packages/com.burbn.instagram.ipa \
+      --retry 3 --retry-delay 2
 
-                ls -la packages
-                
-              env:
-                THEOS: ${{ github.workspace }}/theos
+    ls -la packages
+     
+   env:
+    THEOS: ${{ github.workspace }}/theos
+    Instagram_URL: ${{ inputs.decrypted_instagram_url }}
                 Instagram_URL: ${{ inputs.decrypted_instagram_url }}
 
             - name: Get SCInsta Version
