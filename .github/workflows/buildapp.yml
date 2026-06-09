@@ -76,7 +76,7 @@ jobs:
                 cd main
 
                 mkdir -p packages
-                wget "$Instagram_URL" --no-verbose -O packages/com.burbn.instagram.ipa
+                curl -L "$Instagram_URL&confirm=t" -o packages/com.burbn.instagram.ipa
 
                 ls -la packages
                 
